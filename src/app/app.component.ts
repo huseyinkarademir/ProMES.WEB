@@ -14,4 +14,13 @@ import { WorkOrderService } from './services/work-order/work-order.service';
 export class AppComponent {
   title = 'ProMES.WEB';
   constructor(private workOrderService: WorkOrderService) {}  // Servis burada kullanılabilir
+
+  // private fetchData(): void {
+  //   console.log(JSON.stringify(this.form));
+  //   //this.loginService.getData();
+  //   this.loginService.getData().subscribe(result => {
+  //       this.data = result;
+  //       console.log(this.data);
+  //   });
+  // }
 }

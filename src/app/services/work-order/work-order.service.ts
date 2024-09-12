@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class WorkOrderService extends BaseDataService {
 
-  constructor(httpClient: HttpClient) {
+  constructor(protected override httpClient: HttpClient) {
     // BaseDataService constructor'ına HttpClient'ı gönderiyoruz
     super(httpClient);
     // 'WorkOrder' API adı ve 'list-workOrders' controller adını burada ayarlıyoruz

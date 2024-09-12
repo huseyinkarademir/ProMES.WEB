@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { WorkOrderService } from '../../services/work-order/work-order.service';
 import { WorkOrderModel, WorkOrderQueryRequest } from '../../models/work-order/work-order.model';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
     selector: 'app-work-order',
     standalone: true,
     templateUrl: './work-order.component.html',
-    imports: [CommonModule, HttpClientModule],  // HttpClientModule burada kullanılıyor
+    imports: [CommonModule],  // HttpClientModule burada kullanılıyor
     providers: [WorkOrderService] // Servisin burada sağlandığından emin olun
 })
 export class WorkOrderComponent implements OnInit {
@@ -30,7 +29,7 @@ export class WorkOrderComponent implements OnInit {
     private async loadWorkOrders() {
         try {
             let req = {} as WorkOrderQueryRequest
-            this.workOrders = [] //await this.workOrderService.getWorkOrders(req);
+            this.workOrders = await this.workOrderService.getWorkOrders(req);
         } catch (error) {
             console.error('İş emirleri yüklenirken hata oluştu', error);
         }
