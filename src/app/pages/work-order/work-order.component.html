@@ -1,0 +1,35 @@
+<div class="container mt-4">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>İş Emri</th>
+                @for(type of downtimeTypes; track type){
+                    <th>{{ type }}</th>
+                }
+                <th>Toplam</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(workOrder of workOrders; track workOrder)
+            {
+                <tr>
+                    <td>{{ workOrder.workOrderNo }}</td>
+                    @for(type of downtimeTypes; track type){
+                        <td>{{ getDowntimeDuration(workOrder, type) }}</td>
+                    }    
+                    <td>{{ getTotalDowntimeForOrder(workOrder) }}</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><b>Toplam</b></td>
+                @for(type of downtimeTypes; track type)
+                {
+                    <td>{{ getTotalForReason(type) }}</td>
+                }     
+                <td>122</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
