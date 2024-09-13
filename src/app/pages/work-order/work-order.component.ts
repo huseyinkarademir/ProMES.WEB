@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
     selector: 'app-work-order',
     standalone: true,
     templateUrl: './work-order.component.html',
+    styleUrl: './work-order.component.css',
     imports: [CommonModule],  // HttpClientModule burada kullanılıyor
     providers: [WorkOrderService] // Servisin burada sağlandığından emin olun
 })
