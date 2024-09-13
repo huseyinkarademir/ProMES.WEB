@@ -11,34 +11,36 @@ import { CommonModule } from '@angular/common';
     providers: [WorkOrderService] // Servisin burada sağlandığından emin olun
 })
 export class WorkOrderComponent implements OnInit {
-    downtimeTypes: string[] = [];
-    workOrders: WorkOrderModel[] = [];
-    totalDurationsByReason: { [key: string]: number } = {};
+  downtimeColumns: string[] = [];
+  workOrders: WorkOrderModel[] = [];
+  totalDurationsByReason: { [key: string]: number } = {};
 
-    constructor(private workOrderService: WorkOrderService) {}
+  constructor(private workOrderService: WorkOrderService) {}
 
-    ngOnInit(): void {
-        this.loadWorkOrders();
-        // Duruş tiplerine göre dinamik sütunları belirliyoruz
-        this.generateDowntimeColumns();
+  async ngOnInit() {
+    await this.loadWorkOrders();
+  }
 
-        // Duruş sürelerini toplamak için tablo altındaki toplamları hesaplıyoruz
-        this.calculateTotalDurationsByReason();
+  async loadWorkOrders() {
+    try {
+        let req = {} as WorkOrderQueryRequest
+        const response = await this.workOrderService.getWorkOrders(req);
+        this.workOrders = response.workOrderList;
+    } catch (error) {
+        console.error('İş emirleri yüklenirken hata oluştu', error);
     }
 
-    private async loadWorkOrders() {
-        try {
-            let req = {} as WorkOrderQueryRequest
-            this.workOrders = await this.workOrderService.getWorkOrders(req);
-        } catch (error) {
-            console.error('İş emirleri yüklenirken hata oluştu', error);
-        }
-      }
+    this.generateDowntimeColumns();
+    this.calculateTotalDurationsByReason();
+  }
 
-      // Dinamik sütun oluşturma: tüm iş emirlerinde geçen duruş türlerini alıyoruz
   generateDowntimeColumns(): void {
-    const downtimeTypes = new Set<string>();
+    if (!this.workOrders || this.workOrders.length === 0) {
+      console.error('WorkOrders verisi henüz yüklenmemiş.');
+      return; // Eğer veriler yüklenmediyse işlem yapmıyoruz
+    }
 
+    const downtimeTypes = new Set<string>();
     this.workOrders.forEach(order => {
       if (order.downtimeDurations) {
         Object.values(order.downtimeDurations).forEach((downtime: any) => {
@@ -47,12 +49,12 @@ export class WorkOrderComponent implements OnInit {
       }
     });
 
-    this.downtimeTypes = Array.from(downtimeTypes);
+    this.downtimeColumns = Array.from(downtimeTypes);
   }
 
   // Toplam süreyi her duruş türüne göre hesaplama
   calculateTotalDurationsByReason(): void {
-    this.downtimeTypes.forEach(reason => {
+    this.downtimeColumns.forEach(reason => {
       this.totalDurationsByReason[reason] = 0;
 
       this.workOrders.forEach(order => {
@@ -87,6 +89,10 @@ export class WorkOrderComponent implements OnInit {
   // Genel toplam satırı
   getTotalForReason(reason: string): number {
     return this.totalDurationsByReason[reason] || 0;
+  }
+
+  getOverallTotalDowntime(): number {
+    return this.workOrders.reduce((sum, wo) => sum + (wo.totalDowntimeDuration || 0), 0);
   }
 
 }

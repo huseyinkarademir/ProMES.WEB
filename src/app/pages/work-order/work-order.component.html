@@ -1,35 +1,37 @@
 <div class="container mt-4">
-    <table class="table table-bordered table-striped">
-        <thead class="thead-light">
-            <tr>
-                <th>İş Emri</th>
-                @for(type of downtimeTypes; track type){
-                    <th>{{ type }}</th>
-                }
-                <th>Toplam</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for(workOrder of workOrders; track workOrder)
-            {
+    <div class="panel-body table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
                 <tr>
-                    <td>{{ workOrder.workOrderNo }}</td>
-                    @for(type of downtimeTypes; track type){
-                        <td>{{ getDowntimeDuration(workOrder, type) }}</td>
-                    }    
-                    <td>{{ getTotalDowntimeForOrder(workOrder) }}</td>
+                    <th>İş Emri</th>
+                    @for(type of downtimeColumns; track type){
+                        <th>{{ type }}</th>
+                    }
+                    <th>Toplam</th>
                 </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td><b>Toplam</b></td>
-                @for(type of downtimeTypes; track type)
+            </thead>
+            <tbody>
+                @for(workOrder of workOrders; track workOrder)
                 {
-                    <td>{{ getTotalForReason(type) }}</td>
-                }     
-                <td>122</td>
-            </tr>
-        </tfoot>
-    </table>
+                    <tr>
+                        <td>{{ workOrder.workOrderNo }}</td>
+                        @for(type of downtimeColumns; track type){
+                            <td>{{ getDowntimeDuration(workOrder, type) }}</td>
+                        }    
+                        <td>{{ getTotalDowntimeForOrder(workOrder) }}</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><b>Toplam</b></td>
+                    @for(type of downtimeColumns; track type)
+                    {
+                        <td>{{ getTotalForReason(type) }}</td>
+                    }     
+                    <td>{{ getOverallTotalDowntime() }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>
